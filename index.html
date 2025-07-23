@@ -3,206 +3,62 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lasse's Verhaal - Waterpolo Keeper Animatie</title>
+  <title>Lasse's Verhaal - Waterpolo Keeper Achtergrond</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
-
-    /* Basis reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body, html {
-      height: 100%;
+      margin: 0; padding: 0; height: 100%;
       font-family: 'Russo One', sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: #e0f7fa;
+      background: #0f2027;
       overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
+      color: #e0f7fa;
       text-align: center;
-      padding: 20px;
       position: relative;
     }
-
-    /* Container voor tekst */
+    /* Achtergrond GIF */
+    #background-gif {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      transform: translate(-50%, -50%);
+      opacity: 0.15;
+      pointer-events: none;
+      z-index: 0;
+      user-select: none;
+    }
+    /* Container tekst */
     #container {
       position: relative;
+      max-width: 900px;
       background: rgba(10, 50, 70, 0.8);
       border-radius: 15px;
       padding: 40px 30px;
-      max-width: 900px;
-      width: 100%;
       box-shadow: 0 0 20px #00acc1;
       z-index: 10;
-      min-height: 200px;
       user-select: none;
     }
-
     #text {
       font-size: 2.2rem;
       line-height: 1.4;
-      opacity: 0;
-      transition: opacity 1.5s ease-in-out;
       min-height: 120px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       padding: 0 20px;
-      position: relative;
-      z-index: 10;
     }
-
-    /* Highlight voor belangrijke woorden */
     .highlight {
       color: #00acc1;
       text-shadow: 0 0 8px #00acc1;
       font-weight: 700;
     }
-
-    /* Achtergrond animatie container */
-    #animation-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      overflow: visible;
-      z-index: 1;
-    }
-
-    /* Keeper body (een simpel vorm) */
-    .keeper {
-      position: absolute;
-      bottom: 30px;
-      left: 50px;
-      width: 80px;
-      height: 140px;
-      background: linear-gradient(135deg, #005f73, #0a9396);
-      border-radius: 30px 30px 10px 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.6);
-      filter: drop-shadow(0 0 6px #0a9396);
-      animation: keeper-bounce 3s ease-in-out infinite;
-      z-index: 2;
-    }
-
-    /* Keeper hoofd */
-    .keeper::before {
-      content: "";
-      position: absolute;
-      top: -40px;
-      left: 20px;
-      width: 40px;
-      height: 40px;
-      background: #94d2bd;
-      border-radius: 50%;
-      box-shadow: 0 0 8px #94d2bd;
-      animation: keeper-head-move 3s ease-in-out infinite;
-    }
-
-    /* Keeper arm (gestrekt naar bal) */
-    .keeper-arm {
-      position: absolute;
-      top: 30px;
-      left: 60px;
-      width: 20px;
-      height: 80px;
-      background: linear-gradient(135deg, #0a9396, #94d2bd);
-      border-radius: 20px;
-      transform-origin: top center;
-      animation: arm-move 3s ease-in-out infinite;
-      box-shadow: 0 0 10px #00b4d8;
-    }
-
-    /* Animaties keeper */
-    @keyframes keeper-bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
-    }
-
-    @keyframes keeper-head-move {
-      0%, 100% { transform: rotate(0deg); }
-      50% { transform: rotate(8deg); }
-    }
-
-    @keyframes arm-move {
-      0%, 100% { transform: rotate(0deg); }
-      50% { transform: rotate(-30deg); }
-    }
-
-    /* Waterpolo ballen */
-    .ball {
-      position: absolute;
-      bottom: 120px;
-      width: 30px;
-      height: 30px;
-      background: radial-gradient(circle at 10px 10px, #ffd166, #f4a261);
-      border-radius: 50%;
-      box-shadow: 0 0 8px #f4a261;
-      animation-timing-function: ease-in-out;
-      filter: drop-shadow(0 0 4px #f4a261);
-      opacity: 0.9;
-    }
-
-    /* Animaties voor ballen, 3 ballen met verschillende timing */
-    .ball1 {
-      left: 100vw;
-      animation: ball-move1 4.5s linear infinite;
-      animation-delay: 0s;
-    }
-
-    .ball2 {
-      left: 110vw;
-      animation: ball-move2 4.5s linear infinite;
-      animation-delay: 1.5s;
-    }
-
-    .ball3 {
-      left: 120vw;
-      animation: ball-move3 4.5s linear infinite;
-      animation-delay: 3s;
-    }
-
-    /* Animaties bewegen ballen van rechts naar keeper en weer terug */
-    @keyframes ball-move1 {
-      0% { transform: translateX(0) translateY(0); opacity: 0.9; }
-      45% { transform: translateX(-95vw) translateY(-50px) scale(1.1); opacity: 1; }
-      50% { transform: translateX(-100vw) translateY(-70px) scale(1.2); opacity: 1; }
-      55% { transform: translateX(-95vw) translateY(-50px) scale(1); opacity: 0.9; }
-      100% { transform: translateX(0) translateY(0); opacity: 0.9; }
-    }
-
-    @keyframes ball-move2 {
-      0% { transform: translateX(0) translateY(0); opacity: 0.85; }
-      45% { transform: translateX(-95vw) translateY(-40px) scale(1.1); opacity: 1; }
-      50% { transform: translateX(-100vw) translateY(-60px) scale(1.2); opacity: 1; }
-      55% { transform: translateX(-95vw) translateY(-40px) scale(1); opacity: 0.85; }
-      100% { transform: translateX(0) translateY(0); opacity: 0.85; }
-    }
-
-    @keyframes ball-move3 {
-      0% { transform: translateX(0) translateY(0); opacity: 0.8; }
-      45% { transform: translateX(-95vw) translateY(-60px) scale(1.1); opacity: 1; }
-      50% { transform: translateX(-100vw) translateY(-90px) scale(1.2); opacity: 1; }
-      55% { transform: translateX(-95vw) translateY(-60px) scale(1); opacity: 0.8; }
-      100% { transform: translateX(0) translateY(0); opacity: 0.8; }
-    }
   </style>
 </head>
 <body>
-
-  <div id="animation-bg" aria-hidden="true">
-    <div class="keeper">
-      <div class="keeper-arm"></div>
-    </div>
-    <div class="ball ball1"></div>
-    <div class="ball ball2"></div>
-    <div class="ball ball3"></div>
-  </div>
+  <!-- Vervang onderstaande src door de link naar jouw GIF -->
+  <img id="background-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNTA4YjcwMjc5ZjZjNzY3YzlhMDAyZTU1N2VhNDAyMWZmOTNiN2UxNCZjdD1n/I9uReR7jwOuTY/giphy.gif" alt="Waterpolo keeper animatie" aria-hidden="true" />
 
   <div id="container" role="main" aria-live="polite" aria-atomic="true">
     <div id="text" aria-label="Lasse's verhaal"></div>
@@ -218,7 +74,7 @@
       "Ik stond daar op doel alsof mijn leven ervan afhing.",
       "Elke training, elke wedstrijd, elke bal.",
       "Op de tribune zeiden ze: <span class='highlight'>‘Hij moet wat met dat talent gaan doen.’</span>",
-      "Toen kwam <span class='highlight'> Het Ravijn</span>. Eredivisie O16. Mijn kans.",
+      "Toen kwam <span class='highlight'>Het Ravijn</span>. Eredivisie O16. Mijn kans.",
       "Maar mijn trainer heeft mij gement. Hij gaf me geen keuze.",
       "Hij belde me. Legde druk. Alsof ik fout zat door te dromen.",
       "Alsof ik alles wat ik gaf zomaar vergat.",
@@ -249,6 +105,5 @@
 
     showNextSentence();
   </script>
-
 </body>
 </html>
