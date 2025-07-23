@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lasse's Verhaal</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    #text {
+      font-size: 1.8rem;
+      line-height: 1.5;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+      max-width: 800px;
+    }
+  </style>
+</head>
+<body>
+  <div id="text"></div>
+
+  <script>
+    const sentences = [
+      "Ik weet eigenlijk niet hoe ik dit allemaal moet uitleggen, maar het zit te diep om niks mee te doen.",
+      "Dus ik schrijf het op. Voor mezelf. Omdat het eruit moet.",
+      "Ik heb afscheid genomen van mijn klas. Van mijn school. Van mijn club.",
+      "En elk afscheid voelde als een klein stukje van mezelf dat ik moest loslaten.",
+      "BZC was mijn club. Mijn thuis. Mijn mensen.",
+      "Ik stond daar op doel alsof mijn leven ervan afhing.",
+      "Elke training, elke wedstrijd, elke bal.",
+      "Op de tribune zeiden ze: ‘Hij moet wat met dat talent gaan doen.’",
+      "Toen kwam Het Ravijn. Eredivisie O16. Mijn kans.",
+      "Maar mijn trainer heeft mij gement. Hij gaf me geen keuze.",
+      "Hij belde me. Legde druk. Alsof ik fout zat door te dromen.",
+      "Alsof ik alles wat ik gaf zomaar vergat.",
+      "En nu zie ik een gastspeler op mijn plek trainen.",
+      "Alsof ik nooit bestaan heb. Alsof ik te vervangen ben.",
+      "Dat doet pijn. Diep.",
+      "Maar ik ben verder gegaan. Voor mijn droom.",
+      "En dat voelt soms als winnen en verliezen tegelijk.",
+      "Ik hoop dat mensen ooit snappen wat dit echt met me heeft gedaan.",
+      "Ik heb gekozen voor mezelf. En dat mag.",
+      "Maar ik vergeet nooit wie ik was. Of waar ik vandaan kom."
+    ];
+
+    const textEl = document.getElementById('text');
+    let index = 0;
+
+    function showNextSentence() {
+      textEl.style.opacity = 0;
+      setTimeout(() => {
+        textEl.textContent = sentences[index];
+        textEl.style.opacity = 1;
+        index++;
+        if (index < sentences.length) {
+          setTimeout(showNextSentence, 4000); // wacht 4 seconden voor volgende zin
+        }
+      }, 1000); // fade-out duurt 1 seconde
+    }
+
+    showNextSentence();
+  </script>
+</body>
+</html>
