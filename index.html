@@ -6,6 +6,7 @@
   <title>Lasse's Verhaal</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+
     body, html {
       margin: 0; padding: 0; height: 100%;
       font-family: 'Russo One', sans-serif;
@@ -18,23 +19,20 @@
       text-align: center;
       position: relative;
     }
-    #background-gif {
+
+    #background-canvas {
       position: fixed;
-      top: 50%;
-      left: 50%;
+      top: 0; left: 0;
       width: 100vw;
       height: 100vh;
-      object-fit: cover;
-      transform: translate(-50%, -50%);
-      opacity: 0.15;
-      pointer-events: none;
       z-index: 0;
-      user-select: none;
+      pointer-events: none;
     }
+
     #container {
       position: relative;
       max-width: 900px;
-      background: rgba(10, 50, 70, 0.8);
+      background: rgba(10, 50, 70, 0.85);
       border-radius: 15px;
       padding: 40px 30px;
       box-shadow: 0 0 20px #00acc1;
@@ -45,6 +43,7 @@
       justify-content: center;
       align-items: center;
     }
+
     #text {
       font-size: 2.5rem;
       line-height: 1.4;
@@ -52,6 +51,7 @@
       opacity: 0;
       transition: opacity 1.2s ease-in-out;
     }
+
     button {
       font-family: 'Russo One', sans-serif;
       font-size: 1.5rem;
@@ -67,13 +67,14 @@
       z-index: 20;
       user-select: none;
     }
+
     button:hover {
       background-color: #007c91;
     }
   </style>
 </head>
 <body>
-  <img id="background-gif" src="https://media.giphy.com/media/I9uReR7jwOuTY/giphy.gif" alt="Waterpolo keeper animatie" aria-hidden="true" />
+  <canvas id="background-canvas"></canvas>
 
   <div id="container" role="main" aria-live="polite" aria-atomic="true">
     <div id="text">Klik op de knop hieronder om het verhaal te starten.</div>
@@ -130,6 +131,72 @@
       index = 0;
       showSentence();
     });
+
+    // Achtergrond animatie: kleine waterpolo ballen die zacht bewegen
+    const canvas = document.getElementById('background-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Ball {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.radius = 10 + Math.random() * 8;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.speedY = (Math.random() - 0.5) * 0.3;
+        this.alpha = 0.15 + Math.random() * 0.15;
+        this.alphaDirection = Math.random() > 0.5 ? 1 : -1;
+      }
+
+      draw() {
+        const gradient = ctx.createRadialGradient(this.x, this.y, this.radius * 0.2, this.x, this.y, this.radius);
+        gradient.addColorStop(0, `rgba(0, 172, 193, ${this.alpha * 0.7})`);
+        gradient.addColorStop(1, `rgba(0, 172, 193, 0)`);
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x < -this.radius) this.x = width + this.radius;
+        if (this.x > width + this.radius) this.x = -this.radius;
+        if (this.y < -this.radius) this.y = height + this.radius;
+        if (this.y > height + this.radius) this.y = -this.radius;
+
+        this.alpha += 0.002 * this.alphaDirection;
+        if (this.alpha > 0.3) this.alphaDirection = -1;
+        if (this.alpha < 0.1) this.alphaDirection = 1;
+      }
+    }
+
+    const balls = [];
+    const ballCount = 30;
+
+    for (let i = 0; i < ballCount; i++) {
+      balls.push(new Ball());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      for (const ball of balls) {
+        ball.update();
+        ball.draw();
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
   </script>
 </body>
 </html>
