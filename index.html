@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lasse's Verhaal - Met Voorlees Startknop</title>
+  <title>Lasse's Verhaal</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
     body, html {
@@ -12,7 +12,6 @@
       background: #0f2027;
       overflow: hidden;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       color: #e0f7fa;
@@ -41,13 +40,17 @@
       box-shadow: 0 0 20px #00acc1;
       z-index: 10;
       user-select: none;
-      margin-bottom: 20px;
+      min-height: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     #text {
-      font-size: 2.2rem;
+      font-size: 2.5rem;
       line-height: 1.4;
-      min-height: 120px;
       padding: 0 20px;
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
     }
     button {
       font-family: 'Russo One', sans-serif;
@@ -60,24 +63,23 @@
       cursor: pointer;
       box-shadow: 0 0 10px #00acc1;
       transition: background-color 0.3s ease;
+      margin-top: 20px;
+      z-index: 20;
+      user-select: none;
     }
     button:hover {
       background-color: #007c91;
     }
-    .highlight {
-      color: #00acc1;
-      text-shadow: 0 0 8px #00acc1;
-      font-weight: 700;
-    }
   </style>
 </head>
 <body>
-  <img id="background-gif" src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmM2d2htNmN6YjhxdDE5dmE1NWJ3YWRyMjNza3E2ajNqNXEwNnNrbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Bpo3DSDFCBxqxRt49i/giphy.gif" alt="Waterpolo keeper animatie" aria-hidden="true" />
+  <img id="background-gif" src="https://media.giphy.com/media/I9uReR7jwOuTY/giphy.gif" alt="Waterpolo keeper animatie" aria-hidden="true" />
 
   <div id="container" role="main" aria-live="polite" aria-atomic="true">
-    <div id="text" aria-label="Lasse's verhaal">Klik op de knop hieronder om het verhaal voor te laten lezen.</div>
+    <div id="text">Klik op de knop hieronder om het verhaal te starten.</div>
   </div>
-  <button id="startBtn">Start Voorlezen</button>
+
+  <button id="startBtn">Start Verhaal</button>
 
   <script>
     const sentences = [
@@ -88,7 +90,7 @@
       "BZC was mijn club. Mijn thuis. Mijn mensen.",
       "Ik stond daar op doel alsof mijn leven ervan afhing.",
       "Elke training, elke wedstrijd, elke bal.",
-      "Op de tribune zeiden ze: ‘Hij moet wat met dat talent gaan doen.’",
+      "Op de tribune zeiden ze: “Hij moet wat met dat talent gaan doen.”",
       "Toen kwam Het Ravijn. Eredivisie O16. Mijn kans.",
       "Maar mijn trainer heeft mij gement. Hij gaf me geen keuze.",
       "Hij belde me. Legde druk. Alsof ik fout zat door te dromen.",
@@ -107,52 +109,27 @@
     const startBtn = document.getElementById('startBtn');
     let index = 0;
 
-    function speakText(text, callback) {
-      if (!('speechSynthesis' in window)) {
-        alert('Sorry, je browser ondersteunt geen voorlezen.');
-        callback();
-        return;
-      }
-      let utterance = new SpeechSynthesisUtterance(text);
-      const voices = speechSynthesis.getVoices();
-      console.log('Beschikbare stemmen:', voices);
-      // Kies een Nederlandse mannelijke stem als die er is
-      let voice = voices.find(v => v.lang.startsWith('nl') && v.name.toLowerCase().includes('male')) || voices.find(v => v.lang.startsWith('nl')) || voices[0];
-      if(voice) utterance.voice = voice;
-      utterance.rate = 0.9;
-      utterance.pitch = 1.2;
-      utterance.onend = callback;
-      speechSynthesis.speak(utterance);
-    }
-
-    function showNextSentence() {
+    function showSentence() {
       if (index >= sentences.length) {
-        textEl.innerHTML = "Einde van het verhaal. Bedankt voor het luisteren.";
-        startBtn.style.display = 'inline-block';
+        textEl.textContent = "Einde van het verhaal. Bedankt voor het lezen.";
+        startBtn.style.display = "inline-block";
         return;
       }
-      const sentence = sentences[index];
+
       textEl.style.opacity = 0;
       setTimeout(() => {
-        textEl.innerHTML = sentence;
+        textEl.textContent = sentences[index];
         textEl.style.opacity = 1;
-        speakText(sentence, () => {
-          index++;
-          showNextSentence();
-        });
-      }, 500);
+        index++;
+        setTimeout(showSentence, 4000);
+      }, 1200);
     }
 
     startBtn.addEventListener('click', () => {
-      startBtn.style.display = 'none';
+      startBtn.style.display = "none";
       index = 0;
-      showNextSentence();
+      showSentence();
     });
-
-    // Optioneel: laad stemmen alvast zodat ze klaar zijn bij klik
-    speechSynthesis.onvoiceschanged = () => {
-      console.log('Stemmen geladen');
-    };
   </script>
 </body>
 </html>
