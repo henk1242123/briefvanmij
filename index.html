@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lasse's Verhaal - Waterpolo Keeper Achtergrond</title>
+  <title>Lasse's Verhaal - Waterpolo en school</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+    @import url('https://giphy.com/gifs/waterpolo-Bpo3DSDFCBxqxRt49i');
     body, html {
       margin: 0; padding: 0; height: 100%;
       font-family: 'Russo One', sans-serif;
@@ -57,8 +57,7 @@
   </style>
 </head>
 <body>
-  <!-- Vervang onderstaande src door de link naar jouw GIF -->
-  <img id="background-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNTA4YjcwMjc5ZjZjNzY3YzlhMDAyZTU1N2VhNDAyMWZmOTNiN2UxNCZjdD1n/I9uReR7jwOuTY/giphy.gif" alt="Waterpolo keeper animatie" aria-hidden="true" />
+  <img id="background-gif" src="https://media.giphy.com/media/I9uReR7jwOuTY/giphy.gif" alt="Waterpolo keeper animatie" aria-hidden="true" />
 
   <div id="container" role="main" aria-live="polite" aria-atomic="true">
     <div id="text" aria-label="Lasse's verhaal"></div>
@@ -73,8 +72,8 @@
       "BZC was mijn club. Mijn thuis. Mijn mensen.",
       "Ik stond daar op doel alsof mijn leven ervan afhing.",
       "Elke training, elke wedstrijd, elke bal.",
-      "Op de tribune zeiden ze: <span class='highlight'>‘Hij moet wat met dat talent gaan doen.’</span>",
-      "Toen kwam <span class='highlight'>Het Ravijn</span>. Eredivisie O16. Mijn kans.",
+      "Op de tribune zeiden ze: ‘Hij moet wat met dat talent gaan doen.’",
+      "Toen kwam Het Ravijn. Eredivisie O16. Mijn kans.",
       "Maar mijn trainer heeft mij gement. Hij gaf me geen keuze.",
       "Hij belde me. Legde druk. Alsof ik fout zat door te dromen.",
       "Alsof ik alles wat ik gaf zomaar vergat.",
@@ -91,19 +90,45 @@
     const textEl = document.getElementById('text');
     let index = 0;
 
-    function showNextSentence() {
-      textEl.style.opacity = 0;
-      setTimeout(() => {
-        textEl.innerHTML = sentences[index];
-        textEl.style.opacity = 1;
-        index++;
-        if (index < sentences.length) {
-          setTimeout(showNextSentence, 4500);
-        }
-      }, 1500);
+    function speakText(text, callback) {
+      if (!('speechSynthesis' in window)) {
+        console.log('Speech Synthesis not supported');
+        callback();
+        return;
+      }
+      let utterance = new SpeechSynthesisUtterance(text);
+      // Kies een jonge mannelijke stem (afhankelijk van browser)
+      const voices = speechSynthesis.getVoices();
+      let voice = voices.find(v => v.lang.startsWith('nl') && v.name.toLowerCase().includes('male')) || voices.find(v => v.lang.startsWith('nl')) || voices[0];
+      if(voice) utterance.voice = voice;
+      utterance.rate = 0.9; // iets langzamer voor duidelijkheid
+      utterance.pitch = 1.2; // iets hogere pitch, frisser geluid
+      utterance.onend = callback;
+      speechSynthesis.speak(utterance);
     }
 
-    showNextSentence();
+    function showNextSentence() {
+      if (index >= sentences.length) return;
+      const sentence = sentences[index];
+      textEl.style.opacity = 0;
+      setTimeout(() => {
+        textEl.innerHTML = sentence;
+        textEl.style.opacity = 1;
+        speakText(sentence, () => {
+          index++;
+          showNextSentence();
+        });
+      }, 500);
+    }
+
+    // Wachten tot stemmen geladen zijn
+    window.speechSynthesis.onvoiceschanged = () => {
+      showNextSentence();
+    };
+    // Fallback als onvoiceschanged niet afgaat
+    setTimeout(() => {
+      if(index === 0) showNextSentence();
+    }, 1000);
   </script>
 </body>
 </html>
